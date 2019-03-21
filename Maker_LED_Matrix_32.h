@@ -64,5 +64,8 @@ class Maker_LED_Matrix_32 {
              int webPageText(char* url, char* webText, int _n);               //Function opens a web and saves data into a string without displayig on matrix.
              
              int _dispMode;
+
+             void setPixel(uint8_t x, uint8_t y, uint8_t v);
+             void updateDisplay(void);
 };
 #endif

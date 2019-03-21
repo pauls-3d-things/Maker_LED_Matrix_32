@@ -125,6 +125,26 @@ int Maker_LED_Matrix_32::initLEDMatrix() {
   return 1;                                             //Everything went ok? Return 1 for success!.      
 }
 
+void Maker_LED_Matrix_32::setPixel(uint8_t x, uint8_t y, uint8_t v) {
+
+  if(y > 8) {
+    // skip drawing into nirvana
+    return;
+  }
+
+  // then, only draw valid x into the correct segment
+  if (x < 16){
+    matrixL.drawPixel(x, y, v); // todo gamma correction
+  }  else if (x < 32) {
+    matrixR.drawPixel(x-16, y, v); // todo gamma correction
+  }
+}
+
+void Maker_LED_Matrix_32::updateDisplay(void) {
+  matrixL.display();
+  matrixR.display();
+}
+
 void Maker_LED_Matrix_32::brightness(uint8_t _fontLight, uint8_t _backingLight) {
     _brightness = _fontLight;                               //If user want to change brightness of screen, they can use this function.
     _backBrightness = _backingLight;
@@ -323,7 +343,7 @@ int Maker_LED_Matrix_32::webPage(char* url,  int _ms, int _stp, int _rep) {
   
   WiFiClient client;
   HTTPClient http;
-  if (http.begin(client, url)) {
+  if (http.begin(/*client, */ url)) {
     int httpCode = http.GET();
         if (httpCode == HTTP_CODE_OK) {
 			String payload = http.getString();
@@ -353,7 +373,7 @@ int Maker_LED_Matrix_32::webPageText(char* url, char* webText, int _n) {  //This
   
   WiFiClient client;
   HTTPClient http;
-  if (http.begin(client, url)) {
+  if (http.begin(/*client,*/ url)) {
     int httpCode = http.GET();
         if (httpCode == HTTP_CODE_OK) {
 			String payload = http.getString();
